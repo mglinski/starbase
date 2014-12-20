@@ -6,14 +6,15 @@
 Model = (function ($, tower_static) {
 	// Tower model class. This class tracks remaining grid/cpu of a given fit
 	// and other tower status.
-	function Tower() {
+	function Tower(static_data) {
 		this.type = null;
 		this.modules = {};
 		this.update_cb = null;
+		this.static_data = static_data || tower_static;
 	}
 
 	Tower.prototype.setType = function(type) {
-		if (!(type in tower_static['towers'])) {
+		if (!(type in this.static_data['towers'])) {
 			return false;
 		}
 		this.type = type;
@@ -61,9 +62,9 @@ Model = (function ($, tower_static) {
 		if (this.type === null) {
 			return 0;
 		}
-		var power = tower_static['towers'][this.type]['power'];
+		var power = this.static_data['towers'][this.type]['power'];
 		for (var mod in this.modules) {
-			power -= tower_static['mods'][mod]['power'] * this.modules[mod];
+			power -= this.static_data['mods'][mod]['power'] * this.modules[mod];
 		}
 		return power;
 	}
@@ -72,9 +73,9 @@ Model = (function ($, tower_static) {
 		if (this.type === null) {
 			return 0;
 		}
-		var cpu = tower_static['towers'][this.type]['cpu'];
+		var cpu = this.static_data['towers'][this.type]['cpu'];
 		for (var mod in this.modules) {
-			cpu -= tower_static['mods'][mod]['cpu'] * this.modules[mod];
+			cpu -= this.static_data['mods'][mod]['cpu'] * this.modules[mod];
 		}
 		return cpu;
 	}
@@ -82,7 +83,7 @@ Model = (function ($, tower_static) {
 	Tower.prototype.getModules = function() {
 		var mods = [];
 		for (var mod in this.modules) {
-			var m = tower_static['mods'][mod];
+			var m = this.static_data['mods'][mod];
 			var c = this.modules[mod];
 			mods.push({
 				'name': mod,
@@ -101,7 +102,7 @@ Model = (function ($, tower_static) {
 		}
 
 		// get base tower resistances
-		var towerResistance = tower_static['towers'][this.type]['resonances'];
+		var towerResistance = this.static_data['towers'][this.type]['resonances'];
 		var resistances = [];
 		resistances[0] = {
 			'resistances': towerResistance,
@@ -110,7 +111,7 @@ Model = (function ($, tower_static) {
 
 		// get all modules that provide resistances
 		for (var mod in this.modules) {
-			var m = tower_static['mods'][mod];
+			var m = this.static_data['mods'][mod];
 			var c = this.modules[mod];
 			if (typeof m['resonance_multipliers'] != 'undefined') {
 				resistances[resistances.length] = {
@@ -140,8 +141,8 @@ Model = (function ($, tower_static) {
 			return false;
 		}
 
-		tower = tower_static['towers'][this.type];
-		mod = tower_static['mods'][mod_name];
+		tower = this.static_data['towers'][this.type];
+		mod = this.static_data['mods'][mod_name];
 
 		// Weapon bonuses: missiles are silly (they apply terribly). Non-bonused
 		// weapons are silly if we have a non-missile bonus on the tower.
