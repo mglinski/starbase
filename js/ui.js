@@ -138,7 +138,7 @@ App = (function($, model) {
 	}
 
 	function convertToResistance(fpn) {
-		var resist = Math.ceil((fpn * 100 - 100) * -1);
+		var resist = Math.floor((fpn * 100 - 100) * -1);
 		if (resist == 100) {
 			resist -= 1;
 		}
