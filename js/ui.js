@@ -26,6 +26,12 @@ App = (function($, model) {
 		$('#tower-details-pg').text(number_format(tt.power));
 		$('#tower-details-cpu').text(number_format(tt.cpu));
 
+		var resistances = tower.getResistances();
+		$('#tower-details-resistance-em').text(convertToResistance(resistances.em));
+		$('#tower-details-resistance-kinetic').text(convertToResistance(resistances.kinetic));
+		$('#tower-details-resistance-thermal').text(convertToResistance(resistances.thermal));
+		$('#tower-details-resistance-explosive').text(convertToResistance(resistances.explosive));
+
 		var pg_left = $('#tower-details-pg-left');
 		pg_left.text(number_format(tower.getPower()));
 		if (tower.getPower() >= 0) {
@@ -129,6 +135,14 @@ App = (function($, model) {
 		update_tower_details();
 		update_tower_export();
 		update_mod_picker();
+	}
+
+	function convertToResistance(fpn) {
+		var resist = Math.ceil((fpn * 100 - 100) * -1);
+		if (resist == 100) {
+			resist -= 1;
+		}
+		return resist;
 	}
 
 	function init() {

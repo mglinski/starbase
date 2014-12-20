@@ -133,9 +133,16 @@
 							</tfoot>
 						</table>
 						<div class="well">
-							<strong>Name:</strong> <span id="tower-details-name"></span><br />
-							<strong>Total PG:</strong> <span id="tower-details-pg"></span> <i class="fa fa-power-off"></i> <br />
-							<strong>Total CPU:</strong> <span id="tower-details-cpu"></span> <i class="fa fa-cog"></i>
+							<dl class="dl-horizontal">
+								<dt>Name:</dt> <dd><span id="tower-details-name"></span></dd>
+								<dt>Total PG:</dt> <dd><i class="fa fa-power-off"></i> <span id="tower-details-pg"></span></dd>
+								<dt>Total CPU:</dt> <dd><i class="fa fa-cog"></i> <span id="tower-details-cpu"></span></dd>
+<br />
+								<dt>EM Resists:</dt> <dd><i class="icon-resist em"></i> <span id="tower-details-resistance-em"></span>%</dd>
+								<dt>Thermal Resists:</dt> <dd><i class="icon-resist thermal"></i> <span id="tower-details-resistance-thermal"></span>%</dd>
+								<dt>Kinetic Resists:</dt> <dd><i class="icon-resist kinetic"></i> <span id="tower-details-resistance-kinetic"></span>%</dd>
+								<dt>Explosive Resists:</dt> <dd><i class="icon-resist explosive"></i> <span id="tower-details-resistance-explosive"></span>%</dd>
+							</dl>
 						</div>
 					</div>
 				</div>

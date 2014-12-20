@@ -84,12 +84,55 @@ Model = (function ($, tower_static) {
 		for (var mod in this.modules) {
 			var m = tower_static['mods'][mod];
 			var c = this.modules[mod];
-			mods.push({'name': mod,
-				       'count': c,
-				       'power': m['power'] * c,
-				   	   'cpu': m['cpu'] * c});
+			mods.push({
+				'name': mod,
+				'count': c,
+				'power': m['power'] * c,
+				'cpu': m['cpu'] * c,
+				'resistance': m['resonance_multipliers'] * c}
+			);
 		}
 		return mods;
+	}
+
+	Tower.prototype.getResistances = function() {
+		if (this.type === null) {
+			return 0;
+		}
+
+		// get base tower resistances
+		var towerResistance = tower_static['towers'][this.type]['resonances'];
+		var resistances = [];
+		resistances[0] = {
+			'resistances': towerResistance,
+			'count': 1
+		};
+
+		// get all modules that provide resistances
+		for (var mod in this.modules) {
+			var m = tower_static['mods'][mod];
+			var c = this.modules[mod];
+			if (typeof m['resonance_multipliers'] != 'undefined') {
+				resistances[resistances.length] = {
+					'resistances': m['resonance_multipliers'],
+					'count': c
+				}
+			}
+		}
+
+		// multiply everything together and let sit for 30 minutes to firm
+		var final =  {
+			"em": 1.0,
+			"explosive": 1.0,
+			"kinetic": 1.0,
+			"thermal": 1.0
+		};
+		for (var index in resistances) {
+			final = resolveResistances(final, resistances[index]['resistances'], resistances[index]['count'])
+		}
+
+		// bam, thanksgiving dinner!
+		return final;
 	}
 
 	Tower.prototype.isModSilly = function(mod_name) {
@@ -117,6 +160,18 @@ Model = (function ($, tower_static) {
 
 	Tower.prototype.update = function(cb) {
 		this.update_cb = cb;
+	}
+
+	function resolveResistances(oldResistances, newResistance, count) {
+		var base = oldResistances;
+
+		for (var i = 0; count > i; i++) {
+			for (var type in newResistance) {
+				base[type] *= newResistance[type];
+			}
+		}
+
+		return base;
 	}
 
 	function init_data() {
