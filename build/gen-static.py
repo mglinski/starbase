@@ -30,14 +30,17 @@ class SDE:
 				  AND typeName NOT LIKE 'QA %' AND published = 1""", (group_id,))
 		return map(lambda x: x[0], c.fetchall())
 
-	def item_attribute(self, item_name, attribute_name):
+	def item_id(self, item_name):
 		c = self.db.cursor()
 		c.execute("SELECT typeID FROM invTypes WHERE typeName = ?", (item_name,))
-		item_id = c.fetchone()[0]
+		return c.fetchone()[0]
+
+	def item_attribute(self, item_name, attribute_name):
+		c = self.db.cursor()
+		item_id = self.item_id(item_name)
 
 		c.execute("SELECT attributeID FROM dgmAttributeTypes WHERE attributeName = ?", (attribute_name,))
 		attribute_id = c.fetchone()[0]
-
 
 		c.execute("SELECT valueInt, valueFloat FROM dgmTypeAttributes WHERE typeID = ? AND attributeID = ?",
 				  (item_id, attribute_id))
@@ -87,6 +90,7 @@ def dump_towers(sde):
 	tower_types = sde.items_in_group('Control Tower')
 	for ty in tower_types:
 		t = {'name': ty}
+		t['id'] = sde.item_id(ty)
 		t['power'] = sde.item_attribute(ty, 'powerOutput')
 		t['cpu'] = sde.item_attribute(ty, 'cpuOutput')
 		mg = sde.item_meta_group(ty)
@@ -137,6 +141,7 @@ def dump_mods(sde):
 		mod_types = sde.items_in_group(gr)
 		for ty in mod_types:
 			t = {'name': ty}
+			t['id'] = sde.item_id(ty)
 			t['power'] = sde.item_attribute(ty, 'power') or 0
 			t['cpu'] = sde.item_attribute(ty, 'cpu') or 0
 			t['faction'] = sde.item_meta_group(ty) == 'Faction'
