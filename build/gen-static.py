@@ -72,6 +72,16 @@ def bonused_weapon_type(sde, tower_type):
 		return 'projectile'
 	return None
 
+def tower_resonances(sde, tower_type):
+	def getresonance(name):
+		return sde.item_attribute(tower_type, 'shield%sDamageResonance' % name)
+	return {
+		'em': getresonance('Em'),
+		'thermal': getresonance('Thermal'),
+		'kinetic': getresonance('Kinetic'),
+		'explosive': getresonance('Explosive')
+	}
+
 def dump_towers(sde):
 	towers = {}
 	tower_types = sde.items_in_group('Control Tower')
@@ -81,6 +91,7 @@ def dump_towers(sde):
 		t['cpu'] = sde.item_attribute(ty, 'cpuOutput')
 		mg = sde.item_meta_group(ty)
 		t['faction'] = (mg == 'Faction')
+		t['resonances'] = tower_resonances(sde, ty)
 		wt = bonused_weapon_type(sde, ty)
 		if wt:
 			t['weapon_type'] = wt
@@ -103,6 +114,19 @@ def mod_weapon_type(sde, type_name):
 		return 'missile'
 	return None
 
+def mod_resonances(sde, type_name):
+	def getresonance(name):
+		return sde.item_attribute(type_name, '%sDamageResonanceMultiplier' % name)
+	rs = {
+		'em': getresonance('em'),
+		'thermal': getresonance('thermal'),
+		'kinetic': getresonance('kinetic'),
+		'explosive': getresonance('explosive')
+	}
+	if rs['em'] or rs['thermal'] or rs['kinetic'] or rs['explosive']:
+		return rs
+	return None
+
 def dump_mods(sde):
 	mods = {}
 	mod_groups = sde.groups_in_category('Structure')
@@ -116,6 +140,9 @@ def dump_mods(sde):
 			t['power'] = sde.item_attribute(ty, 'power') or 0
 			t['cpu'] = sde.item_attribute(ty, 'cpu') or 0
 			t['faction'] = sde.item_meta_group(ty) == 'Faction'
+			rm = mod_resonances(sde, ty)
+			if rm:
+				t['resonance_multipliers'] = rm
 			wt = mod_weapon_type(sde, ty)
 			if wt:
 				t['weapon_type'] = wt
