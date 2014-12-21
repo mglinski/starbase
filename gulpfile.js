@@ -68,7 +68,7 @@ var paths = {
 };
 
 /**
- * Styles
+ * Styles Task
  */
 gulp.task('styles', function() {
 	return gulp.src(paths.dev.css)
@@ -83,7 +83,7 @@ gulp.task('styles', function() {
 });
 
 /**
- * Scripts
+ * Scripts Task
  */
 gulp.task('scripts', function() {
 	return gulp.src(paths.dev.js)
@@ -99,7 +99,7 @@ gulp.task('scripts', function() {
 });
 
 /**
- * Images
+ * Images Task
  */
 gulp.task('images', function() {
 	return gulp.src(paths.dev.img)
@@ -110,7 +110,7 @@ gulp.task('images', function() {
 });
 
 /**
- * Fonts
+ * Fonts Task
  */
 gulp.task('fonts', function() {
 	return gulp.src(paths.dev.fonts)
@@ -121,21 +121,21 @@ gulp.task('fonts', function() {
 
 
 /**
- * Clean
+ * Clean Task
  */
 gulp.task('clean', function(cb) {
 	del([paths.production.css, paths.production.js, paths.production.img, paths.production.fonts], cb)
 });
 
 /**
- *
+ * Default Task
  */
 gulp.task('default', ['clean'], function() {
 	gulp.start('styles', 'scripts', 'images', 'fonts');
 });
 
 /**
- * Watch
+ * Watch Task
  */
 gulp.task('watch', function() {
 
