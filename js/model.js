@@ -25,6 +25,9 @@ Model = (function ($, tower_static) {
 	}
 
 	Tower.prototype.add = function(mod) {
+		if (!(mod in this.static_data['mods'])) {
+			return false;
+		}
 		if (mod in this.modules) {
 			this.modules[mod]++;
 		} else {
@@ -33,18 +36,21 @@ Model = (function ($, tower_static) {
 		if (this.update_cb) {
 			this.update_cb();
 		}
+		return true;
 	};
 
 	Tower.prototype.remove = function(mod) {
-		if (mod in this.modules) {
-			this.modules[mod]--;
-			if (this.modules[mod] == 0) {
-				delete this.modules[mod];
-			}
+		if (!(mod in this.modules)) {
+			return false;
+		}
+		this.modules[mod]--;
+		if (this.modules[mod] == 0) {
+			delete this.modules[mod];
 		}
 		if (this.update_cb) {
 			this.update_cb();
 		}
+		return true;
 	}
 
 	Tower.prototype.serialize = function(name) {
@@ -89,23 +95,22 @@ Model = (function ($, tower_static) {
 				'name': mod,
 				'count': c,
 				'power': m['power'] * c,
-				'cpu': m['cpu'] * c,
-				'resistance': m['resonance_multipliers'] * c}
-			);
+				'cpu': m['cpu'] * c
+			});
 		}
 		return mods;
 	}
 
-	Tower.prototype.getResistances = function() {
+	Tower.prototype.getResonances = function() {
 		if (this.type === null) {
 			return 0;
 		}
 
-		// get base tower resistances
-		var towerResistance = this.static_data['towers'][this.type]['resonances'];
-		var resistances = [];
-		resistances[0] = {
-			'resistances': towerResistance,
+		// get base tower resonance
+		var towerResonances = this.static_data['towers'][this.type]['resonances'];
+		var resonances = [];
+		resonances[0] = {
+			'resonances': towerResonances,
 			'count': 1
 		};
 
@@ -114,22 +119,22 @@ Model = (function ($, tower_static) {
 			var m = this.static_data['mods'][mod];
 			var c = this.modules[mod];
 			if (typeof m['resonance_multipliers'] != 'undefined') {
-				resistances[resistances.length] = {
-					'resistances': m['resonance_multipliers'],
+				resonances[resonances.length] = {
+					'resonances': m['resonance_multipliers'],
 					'count': c
 				}
 			}
 		}
 
 		// multiply everything together and let sit for 30 minutes to firm
-		var final =  {
+		var final = {
 			"em": 1.0,
 			"explosive": 1.0,
 			"kinetic": 1.0,
 			"thermal": 1.0
 		};
-		for (var index in resistances) {
-			final = resolveResistances(final, resistances[index]['resistances'], resistances[index]['count'])
+		for (var index in resonances) {
+			final = resolveResonances(final, resonances[index]['resonances'], resonances[index]['count'])
 		}
 
 		// bam, thanksgiving dinner!
@@ -163,12 +168,12 @@ Model = (function ($, tower_static) {
 		this.update_cb = cb;
 	}
 
-	function resolveResistances(oldResistances, newResistance, count) {
-		var base = oldResistances;
+	function resolveResonances(oldResonances, newResonance, count) {
+		var base = oldResonances;
 
 		for (var i = 0; count > i; i++) {
-			for (var type in newResistance) {
-				base[type] *= newResistance[type];
+			for (var type in newResonance) {
+				base[type] *= newResonance[type];
 			}
 		}
 
@@ -176,6 +181,9 @@ Model = (function ($, tower_static) {
 	}
 
 	function init_data() {
+		if (tower_static === null) {
+			return;
+		}
 		var data = {
 			'towers': [],
 			'mods': [],
