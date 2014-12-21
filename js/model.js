@@ -64,6 +64,67 @@ Model = (function ($, tower_static) {
 		return serialized;
 	}
 
+	Tower.prototype.exportToFragment = function() {
+		if (this.type === null) {
+			return null;
+		}
+		var exp = 'T' + this.static_data['towers'][this.type]['id'];
+		for (var mod in this.modules) {
+			exp += '-' + this.static_data['mods'][mod]['id'] + 'x' + this.modules[mod];
+		}
+		return exp;
+	}
+
+	Tower.prototype.importFromFragment = function(frag) {
+		var self = this;
+		function towerById(id) {
+			for (var idx in self.static_data['towers']) {
+				if (self.static_data['towers'][idx]['id'] == id) {
+					console.log('found tower: ', self.static_data['towers'][idx]);
+					return self.static_data['towers'][idx]['name'];
+				}
+			}
+			return null;
+		}
+		function modById(id) {
+			for (var idx in self.static_data['mods']) {
+				if (self.static_data['mods'][idx]['id'] == id) {
+					return self.static_data['mods'][idx]['name'];
+				}
+			}
+			return null;
+		}
+		var parts = frag.split('-');
+		if (parts.length === 0 || parts[0].indexOf('T') != 0) {
+			return false;
+		}
+		var tower = towerById(+(parts[0].substring(1)));
+		if (tower === null) {
+			return false;
+		}
+
+		var mods = {};
+		parts = parts.slice(1);
+		for (var idx in parts) {
+			var mod_parts = parts[idx].split('x');
+			if (mod_parts.length != 2) {
+				return false;
+			}
+			var mod = modById(mod_parts[0]);
+			var count = +(mod_parts[1]);
+			if (mod === null || count <= 0) {
+				return false;
+			}
+			mods[mod] = +(mod_parts[1]);
+		}
+
+		console.log('type -> ' + tower);
+		this.type = tower;
+		this.modules = mods;
+
+		return true;
+	}
+
 	Tower.prototype.getPower = function() {
 		if (this.type === null) {
 			return 0;

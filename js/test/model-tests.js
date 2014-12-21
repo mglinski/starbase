@@ -170,3 +170,47 @@ QUnit.test("getResonances", function(assert) {
 	assert.equal(rs['kinetic'], 0.5 * 1.0 * 1.0 * 1.0, 'third kinetic resonance');
 	assert.equal(rs['explosive'], 1.0 * 1.0 * 1.0 * 1.0, 'third explosive resonance');
 });
+
+QUnit.test('fragmentExport', function(assert) {
+	var st = { 'towers': { 'foo': { 'id': 100 } },
+			    'mods': { 'bar': { 'id': 200 },
+			              'baz': { 'id': 300 } } };
+	var t = new Model.tower(st);
+	assert.equal(t.exportToFragment(), null, 'untyped tower is null fragment');
+	t.setType('foo');
+	assert.equal(t.exportToFragment(), 'T100', 'tower type in fragment');
+	assert.ok(t.add('bar'));
+	assert.ok(t.add('bar'));
+	assert.equal(t.exportToFragment(), 'T100-200x2', 'fragment includes module');
+	assert.ok(t.add('baz'));
+	var f = t.exportToFragment();
+	assert.ok(f == 'T100-200x2-300x1' || f == 'T100-300x1-200x2', 'fragment includes modules');
+});
+
+QUnit.test('fragmentImport', function(assert) {
+	var st = { 'towers': { 'foo': { 'id': 100, 'name': 'foo', 'cpu': 100, 'power': 100 } },
+			    'mods': { 'bar': { 'id': 200, 'name': 'bar', 'cpu': 1, 'power': 1 },
+			              'baz': { 'id': 300, 'name': 'baz', 'cpu': 1, 'power': 1 } } };
+	var t = new Model.tower(st);
+	assert.expect(12);
+	assert.ok(!t.importFromFragment(''), 'empty fragment');
+	assert.ok(!t.importFromFragment('A100'), 'malformed fragment');
+	assert.equal(t.type, null);
+	assert.ok(!t.importFromFragment('T101'), 'invalid tower id');
+	assert.ok(!t.importFromFragment('T100-200'), 'missing module count');
+	assert.ok(!t.importFromFragment('T100-x2'), 'missing module id');
+	assert.ok(!t.importFromFragment('T100-201x2'), 'invalid module id');
+	assert.ok(!t.importFromFragment('T100-200x0'), 'zero count');
+
+	assert.ok(t.importFromFragment('T100-200x2-300x1'));
+	assert.equal(t.type, 'foo', 'right tower type');
+	var mods = t.getModules();
+	for (var idx in mods) {
+		var m = mods[idx];
+		if (m['name'] == 'bar') {
+			assert.equal(m['count'], 2, 'right number of bar modules');
+		} else if (m['name'] == 'baz') {
+			assert.equal(m['count'], 1, 'right number of baz modules');
+		}
+	}
+});
