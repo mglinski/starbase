@@ -14,7 +14,8 @@ var gulp = require('gulp'),
 	cache = require('gulp-cache'),
 	livereload = require('gulp-livereload'),
 	del = require('del'),
-	sprite = require('css-sprite').stream;
+	sprite = require('css-sprite').stream,
+	replace = require('gulp-replace');
 
 /**
  * Path Settings
@@ -37,12 +38,15 @@ var paths = {
 		'css': [
 			settings.bower + 'bootstrap/dist/css/bootstrap.css',
 			settings.bower + 'fontawesome/css/font-awesome.css',
+			settings.bower + 'select2/select2.css',
+			settings.bower + 'select2-bootstrap-css/select2-bootstrap.css',
 			settings.private + settings.css + '**/*.css',
 		],
 		'js': [
 			settings.bower + 'jquery/dist/jquery.js',
 			settings.bower + 'modernizr/modernizr.js',
 			settings.bower + 'bootstrap/dist/js/bootstrap.js',
+			settings.bower + 'select2/select2.js',
 			settings.private + settings.js + 'util.js',
 			settings.private + settings.js + 'static.js',
 			settings.private + settings.js + 'model.js',
@@ -55,6 +59,9 @@ var paths = {
 			settings.private + settings.fonts + '**/*'
 		],
 		'img': [
+			settings.bower +  'select2/select2.png',
+			settings.bower +  'select2/select2x2.png',
+			settings.bower +  'select2/select2-spinner.gif',
 			settings.private + settings.images + '**/*',
 		]
 	},
@@ -72,11 +79,12 @@ var paths = {
  */
 gulp.task('styles', function() {
 	return gulp.src(paths.dev.css)
-		.pipe(autoprefixer('last 2 version', 'safari 5', 'ie 8', 'ie 9', 'opera 12.1', 'ios 6', 'android 4'))
+		.pipe(autoprefixer('last 2 version', 'safari 5', 'ie 9', 'opera 12.1', 'ios 6', 'android 4'))
 		.pipe(gulp.dest(paths.production.css))
 		.pipe(concat('main.css'))
 		.pipe(rename({suffix: '.min'}))
 		.pipe(minifycss())
+		.pipe(replace('url(select', 'url(../img/select')) // lol fix select2's bad layout
 		.pipe(gulp.dest(paths.production.css))
 		//.pipe(notify({ message: 'Styles task complete' }))
 		;
