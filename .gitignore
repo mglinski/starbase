@@ -1,1 +1,4 @@
 /js/static.js
+bower_packages
+node_modules
+dist

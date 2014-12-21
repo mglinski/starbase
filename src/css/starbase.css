@@ -1,0 +1,22 @@
+.icon-resist {
+	display:inline-block;
+	width:16px;
+	height:16px;
+	vertical-align: middle;
+}
+
+.icon-resist.em {
+	background: url("../img/resist/small/em.png");
+}
+
+.icon-resist.thermal {
+	background: url("../img/resist/small/thermal.png");
+}
+
+.icon-resist.kinetic {
+	background: url("../img/resist/small/kinetic.png");
+}
+
+.icon-resist.explosive {
+	background: url("../img/resist/small/explosive.png");
+}
