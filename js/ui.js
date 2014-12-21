@@ -26,11 +26,11 @@ App = (function($, model) {
 		$('#tower-details-pg').text(number_format(tt.power));
 		$('#tower-details-cpu').text(number_format(tt.cpu));
 
-		var resistances = tower.getResistances();
-		$('#tower-details-resistance-em').text(convertToResistance(resistances.em));
-		$('#tower-details-resistance-kinetic').text(convertToResistance(resistances.kinetic));
-		$('#tower-details-resistance-thermal').text(convertToResistance(resistances.thermal));
-		$('#tower-details-resistance-explosive').text(convertToResistance(resistances.explosive));
+		var resonances = tower.getResonances();
+		$('#tower-details-resistance-em').text(convertToResistance(resonances.em));
+		$('#tower-details-resistance-kinetic').text(convertToResistance(resonances.kinetic));
+		$('#tower-details-resistance-thermal').text(convertToResistance(resonances.thermal));
+		$('#tower-details-resistance-explosive').text(convertToResistance(resonances.explosive));
 
 		var pg_left = $('#tower-details-pg-left');
 		pg_left.text(number_format(tower.getPower()));
@@ -117,7 +117,10 @@ App = (function($, model) {
 			var e = $('<option />', opts);
 			e_type.append(e);
 		}
+	}
 
+	function update_fragment() {
+		window.location.hash = tower.exportToFragment();
 	}
 
 	function add_mod() {
@@ -135,6 +138,7 @@ App = (function($, model) {
 		update_tower_details();
 		update_tower_export();
 		update_mod_picker();
+		update_fragment();
 	}
 
 	function convertToResistance(fpn) {
@@ -153,7 +157,9 @@ App = (function($, model) {
 
 		tower.update(tower_updated);
 
-		set_tower_type();
+		if (!window.location.hash || !tower.importFromFragment(window.location.hash.substring(1))) {
+			set_tower_type();
+		}
 	}
 
 	$(document).ready(init);

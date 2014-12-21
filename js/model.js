@@ -122,6 +122,10 @@ Model = (function ($, tower_static) {
 		this.type = tower;
 		this.modules = mods;
 
+		if (this.update_cb) {
+			this.update_cb();
+		}
+
 		return true;
 	}
 

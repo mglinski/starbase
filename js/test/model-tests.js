@@ -192,7 +192,10 @@ QUnit.test('fragmentImport', function(assert) {
 			    'mods': { 'bar': { 'id': 200, 'name': 'bar', 'cpu': 1, 'power': 1 },
 			              'baz': { 'id': 300, 'name': 'baz', 'cpu': 1, 'power': 1 } } };
 	var t = new Model.tower(st);
-	assert.expect(12);
+	var cb_calls = 0;
+	var cb = function() { cb_calls++; };
+	t.update(cb);
+	assert.expect(13);
 	assert.ok(!t.importFromFragment(''), 'empty fragment');
 	assert.ok(!t.importFromFragment('A100'), 'malformed fragment');
 	assert.equal(t.type, null);
@@ -213,4 +216,5 @@ QUnit.test('fragmentImport', function(assert) {
 			assert.equal(m['count'], 1, 'right number of baz modules');
 		}
 	}
+	assert.equal(cb_calls, 1, 'import calls update');
 });
