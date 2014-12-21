@@ -1,9 +1,12 @@
 {
 	"name": "starbase",
+	"version": "1.0.0",
 	"dependencies": {
 		"bootstrap": "~3.3.0",
 		"fontawesome": "~4.2.0",
-		"modernizr": "~2.8.0",
+		"modernizr": "~2.8.0"
+	},
+	"devDependencies": {
 		"qunit": "~1.16.0"
 	}
 }
