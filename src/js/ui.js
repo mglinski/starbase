@@ -135,13 +135,28 @@ App = (function($, model) {
 	}
 
 	function init_actions() {
+
+		// Link Actions
+		$('.stopLink').on('click, dblclick', function(e){
+			e.preventDefault();
+			return false;
+		})
+
+		// Modal Actions
 		$('#urlModal').on('shown.bs.modal', function(){
 			var url = window.location;
 			$('.buildLink').val(url);
 		});
 
-		$('#getBuild').on('click', function(){
+		$('#getBuild').on('click', function(e){
+			e.preventDefault();
 			$('#urlModal').modal('show');
+			return false;
+		});
+
+		// setup select2 boxes
+		$(document).ready(function() {
+			$("#tower-type, #mod-picker-type").select2();
 		});
 	}
 
