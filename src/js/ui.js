@@ -147,7 +147,6 @@ App = (function($, model) {
 			var url = window.location;
 			$('.buildLink').val(url);
 		});
-
 		$('#getBuild').on('click', function(e){
 			e.preventDefault();
 			$('#urlModal').modal('show');
