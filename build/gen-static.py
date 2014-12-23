@@ -85,6 +85,14 @@ def tower_resonances(sde, tower_type):
 		'explosive': getresonance('Explosive')
 	}
 
+def hps(sde, item_type):
+	return {
+		'structure': sde.item_attribute(item_type, 'hp'),
+		'armor': sde.item_attribute(item_type, 'armorHP'),
+		# this is a float, :ccp:
+		'shield': int(sde.item_attribute(item_type, 'shieldCapacity'))
+	}
+
 def dump_towers(sde):
 	towers = {}
 	tower_types = sde.items_in_group('Control Tower')
@@ -96,6 +104,7 @@ def dump_towers(sde):
 		mg = sde.item_meta_group(ty)
 		t['faction'] = (mg == 'Faction')
 		t['resonances'] = tower_resonances(sde, ty)
+		t['hp'] = hps(sde, ty)
 		wt = bonused_weapon_type(sde, ty)
 		if wt:
 			t['weapon_type'] = wt
@@ -145,6 +154,7 @@ def dump_mods(sde):
 			t['power'] = sde.item_attribute(ty, 'power') or 0
 			t['cpu'] = sde.item_attribute(ty, 'cpu') or 0
 			t['faction'] = sde.item_meta_group(ty) == 'Faction'
+			t['hp'] = hps(sde, ty)
 			rm = mod_resonances(sde, ty)
 			if rm:
 				t['resonance_multipliers'] = rm
