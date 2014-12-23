@@ -10,7 +10,12 @@
 		<nav class="navbar navbar-default navbar-static-top" role="navigation">
 			<div class="container">
 				<div class="navbar-header">
-					<a class="navbar-brand" href="#">EVE POS Builder</a>
+					<a class="navbar-brand" href="javascript:void(0)">EVE POS Builder</a>
+				</div>
+				<div id="navbar" class="navbar-collapse collapse">
+					<ul class="nav navbar-nav">
+						<li><a id="getBuild" href="javascript:void(0)">Get Build URL</a></li>
+					</ul>
 				</div>
 			</div>
 		</nav>
@@ -131,10 +136,10 @@
 								<dt>Total PG:</dt> <dd><i class="fa fa-power-off"></i> <span id="tower-details-pg"></span></dd>
 								<dt>Total CPU:</dt> <dd><i class="fa fa-cog"></i> <span id="tower-details-cpu"></span></dd>
 <br />
-								<dt>EM Resists:</dt> <dd><i class="icon-resist em"></i> <span id="tower-details-resistance-em"></span>%</dd>
-								<dt>Thermal Resists:</dt> <dd><i class="icon-resist thermal"></i> <span id="tower-details-resistance-thermal"></span>%</dd>
-								<dt>Kinetic Resists:</dt> <dd><i class="icon-resist kinetic"></i> <span id="tower-details-resistance-kinetic"></span>%</dd>
-								<dt>Explosive Resists:</dt> <dd><i class="icon-resist explosive"></i> <span id="tower-details-resistance-explosive"></span>%</dd>
+								<dt>EM Resists:</dt> <dd><i class="icon-resist em"></i> <span id="tower-details-resonance-em"></span>%</dd>
+								<dt>Thermal Resists:</dt> <dd><i class="icon-resist thermal"></i> <span id="tower-details-resonance-thermal"></span>%</dd>
+								<dt>Kinetic Resists:</dt> <dd><i class="icon-resist kinetic"></i> <span id="tower-details-resonance-kinetic"></span>%</dd>
+								<dt>Explosive Resists:</dt> <dd><i class="icon-resist explosive"></i> <span id="tower-details-resonance-explosive"></span>%</dd>
 							</dl>
 						</div>
 					</div>
@@ -153,6 +158,28 @@
 				</div>
 			</div>
 		</footer>
+
+		<div id="urlModal" class="modal fade">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+						<h4 class="modal-title">Build URL</h4>
+					</div>
+					<div class="modal-body">
+						<form onsubmit="return false;">
+							<div class="form-group">
+								<label for="recipient-name" class="control-label">Share URL:</label><br />
+								<input type="text" class="buildLink form-control span6" onfocus="this.select()" class="form-control" id="recipient-name">
+							</div>
+						</form>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					</div>
+				</div><!-- /.modal-content -->
+			</div><!-- /.modal-dialog -->
+		</div><!-- /.modal -->
 
 		<script>
 			$(document).ready(function() {
