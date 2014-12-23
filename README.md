@@ -15,10 +15,10 @@ You will need [Node.JS and NPM](https://docs.npmjs.com/getting-started/installin
 
 If you ever update starbase, just run this command to rebuild everything:
 
-    (cd build && wget https://www.fuzzwork.co.uk/dump/sqlite-latest.sqlite.bz2 && bzip2 -d sqlite-latest.sqlite.bz2 && make && cd ../ && npm update && bower update && gulp)
+    (cd build && rm -f sqlite-latest.sqlite.bz2 && rm -f sqlite-latest.sqlite && wget https://www.fuzzwork.co.uk/dump/sqlite-latest.sqlite.bz2 && bzip2 -d sqlite-latest.sqlite.bz2 && make && cd ../ && npm update && bower update && gulp)
 
 ## Contributing
-Follow git-flow for contributing back changes.
+Follow the git-flow process for contributing back changes.
 
 ## License
 See the LICENSE file, project is licensed under the standard MIT License.
