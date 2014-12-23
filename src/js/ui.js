@@ -27,10 +27,10 @@ App = (function($, model) {
 		$('#tower-details-cpu').text(number_format(tt.cpu));
 
 		var resonances = tower.getResonances();
-		$('#tower-details-resistance-em').text(convertToResistance(resonances.em));
-		$('#tower-details-resistance-kinetic').text(convertToResistance(resonances.kinetic));
-		$('#tower-details-resistance-thermal').text(convertToResistance(resonances.thermal));
-		$('#tower-details-resistance-explosive').text(convertToResistance(resonances.explosive));
+		$('#tower-details-resonance-em').text(convertToResistance(resonances.em));
+		$('#tower-details-resonance-kinetic').text(convertToResistance(resonances.kinetic));
+		$('#tower-details-resonance-thermal').text(convertToResistance(resonances.thermal));
+		$('#tower-details-resonance-explosive').text(convertToResistance(resonances.explosive));
 
 		var pg_left = $('#tower-details-pg-left');
 		pg_left.text(number_format(tower.getPower()));
@@ -134,6 +134,17 @@ App = (function($, model) {
 		update_mod_picker();
 	}
 
+	function init_actions() {
+		$('#urlModal').on('shown.bs.modal', function(){
+			var url = window.location;
+			$('.buildLink').val(url);
+		});
+
+		$('#getBuild').on('click', function(){
+			$('#urlModal').modal('show');
+		});
+	}
+
 	function tower_updated() {
 		update_tower_details();
 		update_tower_export();
@@ -154,6 +165,7 @@ App = (function($, model) {
 
 		init_tower_types();
 		init_mod_picker();
+		init_actions();
 
 		tower.update(tower_updated);
 
