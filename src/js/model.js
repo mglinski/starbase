@@ -118,7 +118,6 @@ Model = (function ($, tower_static) {
 			mods[mod] = +(mod_parts[1]);
 		}
 
-		console.log('type -> ' + tower);
 		this.type = tower;
 		this.modules = mods;
 
@@ -204,6 +203,27 @@ Model = (function ($, tower_static) {
 
 		// bam, thanksgiving dinner!
 		return final;
+	}
+
+	Tower.prototype.getFuelConsumption = function(purpose, duration, hs_faction_name) {
+		if (this.type === null) {
+			return null;
+		}
+
+		var tower = this.static_data['towers'][this.type];
+		var fuels = {};
+
+		for (var f in tower['fuel']) {
+			if (tower['fuel'][f]['purpose'] != purpose) {
+				continue;
+			}
+			if ('empire' in tower['fuel'][f] && hs_faction_name != tower['fuel'][f]['empire']) {
+				continue;
+			}
+			fuels[f] = tower['fuel'][f]['perhour'] * duration;
+		}
+
+		return fuels;
 	}
 
 	Tower.prototype.isModSilly = function(mod_name) {

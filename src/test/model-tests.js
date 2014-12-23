@@ -218,3 +218,45 @@ QUnit.test('fragmentImport', function(assert) {
 	}
 	assert.equal(cb_calls, 1, 'import calls update');
 });
+
+QUnit.test('getFuelConsumption', function(assert) {
+	var st = { 'towers': { 'foo': { 'fuel': {
+		'Block': {
+			'purpose': 'online',
+			'perhour': 5,
+		},
+		'Stront': {
+			'purpose': 'reinforce',
+			'perhour': 75,
+		},
+		'Charter A': {
+			'purpose': 'online',
+			'perhour': 3,
+			'empire': 'A',
+		},
+		'Charter B': {
+			'purpose': 'online',
+			'perhour': 4,
+			'empire': 'B'
+		}
+	} } } };
+	var t = new Model.tower(st);
+	t.setType('foo');
+
+	var f0 = t.getFuelConsumption('online', 7);
+	assert.deepEqual(f0, { 'Block': 7 * 5 }, "blocks per hour consumed");
+
+	var f1 = t.getFuelConsumption('reinforce', 36);
+	assert.deepEqual(f1, { 'Stront': 75 * 36 }, "stront per hour consumed");
+
+	var f2 = t.getFuelConsumption('online', 5, 'A');
+	assert.equal(f2['Block'], 5 * 5, "blocks consumed in A");
+	assert.equal(f2['Charter A'], 5 * 3, "charters consumed in A");
+	assert.ok(!('Charter B' in f2), "charter B not consumed");
+
+	var f3 = t.getFuelConsumption('online', 5, 'B');
+	assert.deepEqual(f3['Charter B'], 5 * 4, "charters consumed in B");
+
+	var f4 = t.getFuelConsumption('online', 10, 'C');
+	assert.deepEqual(f4, { 'Block': 10 * 5 }, "no charters consumed in C");
+});
