@@ -7,4 +7,4 @@ static.js: gen-static.py sqlite-latest.sqlite
 	./gen-static.py > $@
 
 install:
-	mv static.js ../js
+	mv static.js ../src/js

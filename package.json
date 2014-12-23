@@ -1,0 +1,64 @@
+{
+  "name": "Starbase",
+  "version": "0.1.0",
+  "description": "An Eve Online Starbase Builder Tool",
+  "main": "gulpfile.js",
+  "keywords": [
+    "EVE Online",
+    "POS",
+    "Starbase",
+    "Tool"
+  ],
+  "author": "Elly Fong-Jones",
+  "contributors": [
+    {
+      "name": "Elly Fong-Jones",
+      "url": "https://github.com/elly"
+    },
+    {
+      "name": "Matthew Glinski",
+      "url": "https://github.com/mglinski"
+    }
+  ],
+  "scripts": {
+    "predeploy": "cd build && make && cd ../ && gulp"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/eve-val/starbase"
+  },
+  "bugs": {
+    "url": "https://github.com/eve-val/starbase/issues"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "css-sprite": "^0.9.0",
+    "del": "^1.1.0",
+    "gulp": "~3.8.8",
+    "gulp-autoprefixer": "^2.0.0",
+    "gulp-cache": "^0.2.4",
+    "gulp-concat": "^2.4.2",
+    "gulp-if": "^1.2.5",
+    "gulp-imagemin": "^2.0.0",
+    "gulp-jshint": "^1.9.0",
+    "gulp-less": "^1.3.6",
+    "gulp-livereload": "^3.0.2",
+    "gulp-load-plugins": "^0.7.0",
+    "gulp-minify-css": "^0.3.11",
+    "gulp-notify": "^2.1.0",
+    "gulp-rename": "^1.2.0",
+    "gulp-rev": "^1.1.0",
+    "gulp-ruby-sass": "^0.7.1",
+    "gulp-sass": "^1.1.0",
+    "gulp-shell": "^0.2.9",
+    "gulp-uglify": "^1.0.2",
+    "gulp-util": "^3.0.1",
+    "install": "^0.1.7",
+    "npm": "^2.1.2",
+    "require-dir": "^0.1.0",
+    "underscore": "^1.7.0"
+  },
+  "devDependencies": {
+    "gulp-replace": "^0.5.0"
+  }
+}

@@ -1,0 +1,43 @@
+html {
+	position: relative;
+	min-height: 100%;
+}
+body {
+	/* Margin bottom by footer height */
+	margin-bottom: 60px;
+}
+.footer {
+	position: absolute;
+	bottom: 0;
+	width: 100%;
+	/* Set the fixed height of the footer here */
+	height: 60px;
+	background-color: #f5f5f5;
+}
+
+footer .container .text-muted {
+	margin: 20px 0;
+}
+
+.icon-resist {
+	display:inline-block;
+	width:16px;
+	height:16px;
+	vertical-align: middle;
+}
+
+.icon-resist.em {
+	background: url("../img/resist/small/em.png");
+}
+
+.icon-resist.thermal {
+	background: url("../img/resist/small/thermal.png");
+}
+
+.icon-resist.kinetic {
+	background: url("../img/resist/small/kinetic.png");
+}
+
+.icon-resist.explosive {
+	background: url("../img/resist/small/explosive.png");
+}

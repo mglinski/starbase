@@ -1,15 +1,8 @@
 <html>
 	<head>
 		<title>EVE POS Builder</title>
-		<link rel="stylesheet" type="text/css" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
-		<link rel="stylesheet" type="text/css" href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css">
-		<link rel="stylesheet" type="text/css" href="css/starbase.css">
-		<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-		<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
-		<script src="js/util.js"></script>
-		<script src="js/static.js"></script>
-		<script src="js/model.js"></script>
-		<script src="js/ui.js"></script>
+		<link rel="stylesheet" type="text/css" href="dist/css/main.min.css">
+		<script src="dist/js/main.min.js"></script>
 	</head>
 	<body>
 
@@ -149,5 +142,22 @@
 			</div>
 
 		</div>
+
+		<footer class="footer">
+			<div class="container">
+				<div class="row">
+					<div class="col-sm-12">
+						<p class="text-muted pull-right">MIT Licensed. <a href="https://github.com/eve-val/starbase" target="_blank">Get the Source</a></p>
+						<p class="text-muted">&copy; 2014 - Elly Fong-Jones, Matthew Glinski, CCP.</p>
+					</div>
+				</div>
+			</div>
+		</footer>
+
+		<script>
+			$(document).ready(function() {
+				$("#tower-type, #mod-picker-type").select2();
+			});
+		</script>
 	</body>
 </html>
