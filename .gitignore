@@ -1,4 +1,5 @@
 /src/js/static.js
 bower_packages
 node_modules
+build/sqlite-latest.sqlite
 dist
