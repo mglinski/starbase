@@ -10,11 +10,11 @@
 		<nav class="navbar navbar-default navbar-static-top" role="navigation">
 			<div class="container">
 				<div class="navbar-header">
-					<a class="navbar-brand" href="javascript:void(0)">EVE POS Builder</a>
+					<a class="navbar-brand">EVE POS Builder</a>
 				</div>
 				<div id="navbar" class="navbar-collapse collapse">
 					<ul class="nav navbar-nav">
-						<li><a id="getBuild" href="javascript:void(0)">Get Build URL</a></li>
+						<li><a id="getBuild" href="#" class="stopLink">Get Build URL</a></li>
 					</ul>
 				</div>
 			</div>
@@ -134,8 +134,8 @@
 							<dl class="dl-horizontal">
 								<dt>Name:</dt> <dd><span id="tower-details-name"></span></dd>
 								<dt>Total PG:</dt> <dd><i class="fa fa-power-off"></i> <span id="tower-details-pg"></span></dd>
-								<dt>Total CPU:</dt> <dd><i class="fa fa-cog"></i> <span id="tower-details-cpu"></span></dd>
-<br />
+								<dt>Total CPU:</dt> <dd><i class="fa fa-cog"></i> <span id="tower-details-cpu"></span></dd> <br />
+
 								<dt>EM Resists:</dt> <dd><i class="icon-resist em"></i> <span id="tower-details-resonance-em"></span>%</dd>
 								<dt>Thermal Resists:</dt> <dd><i class="icon-resist thermal"></i> <span id="tower-details-resonance-thermal"></span>%</dd>
 								<dt>Kinetic Resists:</dt> <dd><i class="icon-resist kinetic"></i> <span id="tower-details-resonance-kinetic"></span>%</dd>
@@ -180,11 +180,5 @@
 				</div><!-- /.modal-content -->
 			</div><!-- /.modal-dialog -->
 		</div><!-- /.modal -->
-
-		<script>
-			$(document).ready(function() {
-				$("#tower-type, #mod-picker-type").select2();
-			});
-		</script>
 	</body>
 </html>
