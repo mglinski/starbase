@@ -263,3 +263,14 @@ QUnit.test('getFuelConsumption', function(assert) {
 	var f5 = t.getFuelConsumption('online', 10, false, 'C');
 	assert.deepEqual(f5, { 'Block': 10 * 5 }, "no charters consumed in C");
 });
+
+QUnit.test('isModObsolete', function(assert) {
+	var st = { 'towers': { 'foo': 1 },
+			   'mods': { 'bar': { 'group': 'Foo' },
+			             'baz': { 'group': 'Tracking Array' } } };
+	var t = new Model.tower(st);
+
+	t.setType('foo');
+	assert.ok(!t.isModObsolete('bar'), "non-obsolete mod isn't");
+	assert.ok(t.isModObsolete('baz'), "obsolete mod is");
+});

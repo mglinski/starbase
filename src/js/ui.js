@@ -95,9 +95,11 @@ App = (function($, model) {
 		var e_type = $('#mod-picker-type');
 		var e_silly = $('#mod-picker-show-silly');
 		var e_faction = $('#mod-picker-show-faction');
+		var e_obsolete = $('#mod-picker-show-obsolete');
 
 		var show_silly = e_silly.is(':checked');
 		var show_faction = e_faction.is(':checked');
+		var show_obsolete = e_obsolete.is(':checked');
 
 		var sel = e_type.val();
 
@@ -105,6 +107,9 @@ App = (function($, model) {
 		for (var idx in model.data.mods) {
 			var m = model.data.mods[idx];
 			if (!show_silly && tower.isModSilly(m)) {
+				continue;
+			}
+			if (!show_obsolete && tower.isModObsolete(m)) {
 				continue;
 			}
 			if (!show_faction && model.data.mod(m).faction) {
@@ -130,6 +135,7 @@ App = (function($, model) {
 	function init_mod_picker() {
 		$('#mod-picker-show-silly').change(update_mod_picker);
 		$('#mod-picker-show-faction').change(update_mod_picker);
+		$('#mod-picker-show-obsolete').change(update_mod_picker);
 		$('#mod-picker-add').click(add_mod);
 		update_mod_picker();
 	}

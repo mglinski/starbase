@@ -255,6 +255,17 @@ Model = (function ($, tower_static) {
 		return false;
 	}
 
+	Tower.prototype.isModObsolete = function(mod_name) {
+		var mod = this.static_data['mods'][mod_name];
+		var obsolete_groups = {
+			'Tracking Array': true,
+		};
+		if (mod['group'] in obsolete_groups) {
+			return true;
+		}
+		return false;
+	}
+
 	Tower.prototype.update = function(cb) {
 		this.update_cb = cb;
 	}
