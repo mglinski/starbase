@@ -189,6 +189,7 @@ def dump_mods(sde):
 		for ty in mod_types:
 			t = {'name': ty}
 			t['id'] = sde.item_id(ty)
+			t['group'] = gr
 			t['power'] = sde.item_attribute(ty, 'power') or 0
 			t['cpu'] = sde.item_attribute(ty, 'cpu') or 0
 			t['faction'] = sde.item_meta_group(ty) == 'Faction'
