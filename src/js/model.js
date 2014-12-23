@@ -205,10 +205,16 @@ Model = (function ($, tower_static) {
 		return final;
 	}
 
-	Tower.prototype.getFuelConsumption = function(purpose, duration, hs_faction_name) {
+	Tower.prototype.getFuelConsumption = function(purpose, duration, in_sov, hs_faction_name) {
 		if (this.type === null) {
 			return null;
 		}
+
+		if (in_sov && hs_faction_name) {
+			throw "Can't be in sov and in hs faction space";
+		}
+
+		in_sov = in_sov ? 0.75 : 1.0;
 
 		var tower = this.static_data['towers'][this.type];
 		var fuels = {};
@@ -220,7 +226,7 @@ Model = (function ($, tower_static) {
 			if ('empire' in tower['fuel'][f] && hs_faction_name != tower['fuel'][f]['empire']) {
 				continue;
 			}
-			fuels[f] = tower['fuel'][f]['perhour'] * duration;
+			fuels[f] = Math.ceil(tower['fuel'][f]['perhour'] * duration * in_sov);
 		}
 
 		return fuels;
