@@ -96,6 +96,19 @@ QUnit.test("getCPU", function(assert) {
 	assert.strictEqual(t.getCPU(), 75, "cpu goes back again");
 });
 
+QUnit.test("getVolume", function(assert) {
+	var st = { 'towers': { 'foo': { 'volume': 4000 } },
+	           'mods':  { 'bar': { 'volume': 100 },
+	                      'baz': { 'volume': 50 } } };
+	var t = new Model.tower(st);
+
+	t.setType('foo');
+	t.add('bar');
+	t.add('bar');
+	t.add('baz');
+	assert.strictEqual(t.getVolume(), 4250);
+});
+
 QUnit.test("getModules", function(assert) {
 	var st = { 'towers': { 'foo': 1, },
 			   'mods': { 'bar': { 'cpu': 2, 'power': 3 },

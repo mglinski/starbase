@@ -150,6 +150,17 @@ Model = (function ($, tower_static) {
 		return cpu;
 	}
 
+	Tower.prototype.getVolume = function() {
+		if (this.type === null) {
+			return 0;
+		}
+		var volume = this.static_data['towers'][this.type]['volume'];
+		for (var mod in this.modules) {
+			volume += this.static_data['mods'][mod]['volume'] * this.modules[mod];
+		}
+		return volume;
+	}
+
 	Tower.prototype.getModules = function() {
 		var mods = [];
 		for (var mod in this.modules) {

@@ -41,6 +41,11 @@ class SDE:
 		c.execute("SELECT typeName FROM invTypes WHERE typeID = ?", (item_id,))
 		return c.fetchone()[0]
 
+	def item_volume(self, item_name):
+		c = self.db.cursor()
+		c.execute("SELECT volume FROM invTypes WHERE typeName = ?", (item_name,))
+		return c.fetchone()[0]
+
 	def item_attribute(self, item_name, attribute_name):
 		c = self.db.cursor()
 		item_id = self.item_id(item_name)
@@ -138,6 +143,7 @@ def dump_towers(sde):
 		t['id'] = sde.item_id(ty)
 		t['power'] = sde.item_attribute(ty, 'powerOutput')
 		t['cpu'] = sde.item_attribute(ty, 'cpuOutput')
+		t['volume'] = sde.item_volume(ty)
 		mg = sde.item_meta_group(ty)
 		t['faction'] = (mg == 'Faction')
 		t['resonances'] = tower_resonances(sde, ty)
@@ -189,6 +195,7 @@ def dump_mods(sde):
 		for ty in mod_types:
 			t = {'name': ty}
 			t['id'] = sde.item_id(ty)
+			t['volume'] = sde.item_volume(ty)
 			t['group'] = gr
 			t['power'] = sde.item_attribute(ty, 'power') or 0
 			t['cpu'] = sde.item_attribute(ty, 'cpu') or 0
