@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import collections
 import json
 import sqlite3
 
@@ -35,6 +36,11 @@ class SDE:
 		c.execute("SELECT typeID FROM invTypes WHERE typeName = ?", (item_name,))
 		return c.fetchone()[0]
 
+	def item_name(self, item_id):
+		c = self.db.cursor()
+		c.execute("SELECT typeName FROM invTypes WHERE typeID = ?", (item_id,))
+		return c.fetchone()[0]
+
 	def item_attribute(self, item_name, attribute_name):
 		c = self.db.cursor()
 		item_id = self.item_id(item_name)
@@ -61,6 +67,34 @@ class SDE:
 		c = self.db.cursor()
 		c.execute("SELECT metaGroupName FROM invMetaGroups WHERE metaGroupID = ?", (meta_group_id,))
 		return c.fetchone()[0]
+
+	def faction_name(self, faction_id):
+		c = self.db.cursor()
+		c.execute("SELECT factionName FROM chrFactions WHERE factionID = ?", (faction_id,))
+		return c.fetchone()[0]
+
+	def control_tower_resources(self, tower_name):
+		c = self.db.cursor()
+		tower_id = self.item_id(tower_name)
+
+		purpose_map = {}
+		c.execute("SELECT purpose,purposeText FROM invControlTowerResourcePurposes")
+		for r in c.fetchall():
+			purpose_map[r[0]] = r[1].lower()
+
+		c.execute("SELECT resourceTypeID,purpose,quantity,minSecurityLevel,factionID FROM invControlTowerResources WHERE controlTowerTypeID = ?", (tower_id,))
+		resources = collections.defaultdict(lambda: {})
+		for r in c.fetchall():
+			(type_id, purpose_id, qty, sec, faction_id) = r
+			type_name = self.item_name(type_id)
+			purpose = purpose_map[purpose_id]
+			resources[type_name] = {
+				'purpose': purpose,
+				'perhour': qty,
+			}
+			if sec != None:
+				resources[type_name]['empire'] = self.faction_name(faction_id)
+		return resources
 
 def bonused_weapon_type(sde, tower_type):
 	def hasbonus(name):
@@ -93,6 +127,9 @@ def hps(sde, item_type):
 		'shield': int(sde.item_attribute(item_type, 'shieldCapacity'))
 	}
 
+def tower_fuels(sde, tower_type):
+	return sde.control_tower_resources(tower_type)
+
 def dump_towers(sde):
 	towers = {}
 	tower_types = sde.items_in_group('Control Tower')
@@ -105,6 +142,7 @@ def dump_towers(sde):
 		t['faction'] = (mg == 'Faction')
 		t['resonances'] = tower_resonances(sde, ty)
 		t['hp'] = hps(sde, ty)
+		t['fuel'] = tower_fuels(sde, ty)
 		wt = bonused_weapon_type(sde, ty)
 		if wt:
 			t['weapon_type'] = wt
