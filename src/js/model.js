@@ -226,7 +226,7 @@ Model = (function ($, tower_static) {
 			if ('empire' in tower['fuel'][f] && hs_faction_name != tower['fuel'][f]['empire']) {
 				continue;
 			}
-			fuels[f] = Math.ceil(tower['fuel'][f]['perhour'] * duration * in_sov);
+			fuels[f] = Math.ceil(tower['fuel'][f]['perhour'] * in_sov) * duration;
 		}
 
 		return fuels;

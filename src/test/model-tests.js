@@ -249,8 +249,8 @@ QUnit.test('getFuelConsumption', function(assert) {
 	var f1 = t.getFuelConsumption('reinforce', 36);
 	assert.deepEqual(f1, { 'Stront': 75 * 36 }, "stront per hour consumed");
 
-	var f2 = t.getFuelConsumption('online', 1, true);
-	assert.deepEqual(f2, { 'Block': 4 }, "sov bonus applies");
+	var f2 = t.getFuelConsumption('online', 8, true);
+	assert.deepEqual(f2, { 'Block': 32 }, "sov bonus applies");
 
 	var f3 = t.getFuelConsumption('online', 5, false, 'A');
 	assert.equal(f3['Block'], 5 * 5, "blocks consumed in A");
