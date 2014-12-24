@@ -46,6 +46,11 @@ class SDE:
 		c.execute("SELECT volume FROM invTypes WHERE typeName = ?", (item_name,))
 		return c.fetchone()[0]
 
+	def item_capacity(self, item_name):
+		c = self.db.cursor()
+		c.execute("SELECT capacity FROM invTypes WHERE typeName = ?", (item_name,))
+		return c.fetchone()[0]
+
 	def item_attribute(self, item_name, attribute_name):
 		c = self.db.cursor()
 		item_id = self.item_id(item_name)
@@ -149,6 +154,10 @@ def dump_towers(sde):
 		t['resonances'] = tower_resonances(sde, ty)
 		t['hp'] = hps(sde, ty)
 		t['fuel'] = tower_fuels(sde, ty)
+		t['fuelbays'] = {
+			'online': sde.item_capacity(ty),
+			'reinforce': sde.item_attribute(ty, 'capacitySecondary'),
+		}
 		wt = bonused_weapon_type(sde, ty)
 		if wt:
 			t['weapon_type'] = wt
