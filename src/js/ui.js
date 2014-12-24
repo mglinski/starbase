@@ -38,6 +38,8 @@ App = (function($, model) {
 		$('#tower-details-resonance-thermal').text(convertToResistance(resonances.thermal));
 		$('#tower-details-resonance-explosive').text(convertToResistance(resonances.explosive));
 
+		calcEffectiveHP();
+
 		var pg_left = $('#tower-details-pg-left');
 		pg_left.text(number_format(tower.getPower()));
 		if (tower.getPower() >= 0) {
@@ -235,8 +237,6 @@ App = (function($, model) {
 		var max = 0;
 		var slider_val = $("#tower-fuel-interval").slider('getValue');
 
-		//console.log(slider_val);
-
 		if (slider_val === 1) {
 			max = 24;
 		}
@@ -258,7 +258,6 @@ App = (function($, model) {
 		});
 		$("#tower-fuel-value").slider('setValue',1);
 		$("#tower-fuel-value").off('change').on("change", function(slider) {
-			//console.log(slider);
 			$("#tower-fuel-value-text").text((typeof slider.value === 'undefined' ? '1' : slider.value) + ' ' + fuel_interval_map[slider_val] + (slider.value > 1 ? 's' : ''));
 			updateFuelBlockCalc();
 		});
@@ -315,6 +314,26 @@ App = (function($, model) {
 			$('#tower-details-stront-volume-max').text(number_format(tt.fuelbays['reinforce']));
 			$('#tower-details-stront-hourly').text(number_format(stront[name]) + ' ' + name);
 		}
+	}
+
+	function calcEffectiveHP() {
+		var tt = model.data.tower(tower.type);
+		var base_hp = tt.hp;
+		var resonances = tower.getResonances();
+
+		var low_resonance = 0;
+
+		for (var type in resonances) {
+			if(resonances[type] > low_resonance)
+				low_resonance = resonances[type];
+		}
+
+		var effective_hp = base_hp.shield / low_resonance + base_hp.armor + base_hp.structure;
+
+		$('#tower-details-hitpoints').text(number_format(Math.floor(effective_hp)));
+		$('#tower-hp-shield').text(number_format(base_hp.shield));
+		$('#tower-hp-armor').text(number_format(base_hp.armor));
+		$('#tower-hp-structure').text(number_format(base_hp.structure));
 	}
 
 	function tower_updated() {
