@@ -68,7 +68,7 @@ App = (function($, model) {
 			var m = mods[idx];
 			textBuild[i++] = "<tr>";
 				textBuild[i++] = "<td>"+m.name+"</td>";
-				textBuild[i++] = '<td><label class="label label-default">' + m.count + '</label></td>';
+				textBuild[i++] = '<td><label class="label label-default" style="top: 5px;position: relative;">' + m.count + '</label></td>';
 				textBuild[i++] = "<td>"+number_format(m.power)+"</td>";
 				textBuild[i++] = "<td>"+number_format(m.cpu)+"</td>";
 				textBuild[i++] = "<td>";
