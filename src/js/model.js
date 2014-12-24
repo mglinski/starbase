@@ -80,7 +80,7 @@ Model = (function ($, tower_static) {
 		function towerById(id) {
 			for (var idx in self.static_data['towers']) {
 				if (self.static_data['towers'][idx]['id'] == id) {
-					console.log('found tower: ', self.static_data['towers'][idx]);
+					//console.log('found tower: ', self.static_data['towers'][idx]);
 					return self.static_data['towers'][idx]['name'];
 				}
 			}
