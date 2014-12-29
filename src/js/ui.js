@@ -38,7 +38,7 @@ App = (function($, model) {
 		$('#tower-details-resonance-thermal').text(convertToResistance(resonances.thermal));
 		$('#tower-details-resonance-explosive').text(convertToResistance(resonances.explosive));
 
-		calcEffectiveHP();
+
 
 		var pg_left = $('#tower-details-pg-left');
 		pg_left.text(number_format(tower.getPower()));
@@ -56,7 +56,9 @@ App = (function($, model) {
 			cpu_left.addClass('danger').removeClass('success');
 		}
 
-		updateFuelBlockCalc();
+		calc_effective_hp();
+
+		update_fuel_block_calc();
 
 		var e_modules = $('#tower-details-modules');
 		e_modules.empty();
@@ -210,7 +212,7 @@ App = (function($, model) {
 			}
 		});
 		$("#tower-fuel-interval").on("change", function(slider) {
-			updateFuelBlockSlider();
+			update_fuel_block_slider();
 			$("#tower-fuel-value").slider()
 			$("#tower-fuel-interval-text").text(fuel_interval_map[slider.value]+'s');
 		});
@@ -224,16 +226,16 @@ App = (function($, model) {
 			}
 		});
 		$("#tower-stront-timer").on("change", function(slider) {
-			updateStrontCalc();
+			update_stront_calc();
 			$("#tower-stront-timer-text").text(slider.value+' Hours');
 		});
 
-		updateFuelBlockSlider()
+		update_fuel_block_slider()
 
 		//$("#tower-fuel-slider").slider({step: 20000, min: 0, max: 200000});
 	}
 
-	function updateFuelBlockSlider() {
+	function update_fuel_block_slider() {
 		var max = 0;
 		var slider_val = $("#tower-fuel-interval").slider('getValue');
 
@@ -259,13 +261,13 @@ App = (function($, model) {
 		$("#tower-fuel-value").slider('setValue',1);
 		$("#tower-fuel-value").off('change').on("change", function(slider) {
 			$("#tower-fuel-value-text").text((typeof slider.value === 'undefined' ? '1' : slider.value) + ' ' + fuel_interval_map[slider_val] + (slider.value > 1 ? 's' : ''));
-			updateFuelBlockCalc();
+			update_fuel_block_calc();
 		});
 		$("#tower-fuel-value").trigger('change');
-		updateFuelBlockCalc();
+		update_fuel_block_calc();
 	}
 
-	function updateFuelBlockCalc() {
+	function update_fuel_block_calc() {
 
 		var tt = model.data.tower(tower.type);
 
@@ -296,7 +298,7 @@ App = (function($, model) {
 		}
 	}
 
-	function updateStrontCalc() {
+	function update_stront_calc() {
 
 		var tt = model.data.tower(tower.type);
 
@@ -316,32 +318,23 @@ App = (function($, model) {
 		}
 	}
 
-	function calcEffectiveHP() {
-		var tt = model.data.tower(tower.type);
-		var base_hp = tt.hp;
-		var resonances = tower.getResonances();
+	function calc_effective_hp() {
+		var hp = tower.calcTowerHP();
 
-		var low_resonance = 0;
-
-		for (var type in resonances) {
-			if(resonances[type] > low_resonance)
-				low_resonance = resonances[type];
-		}
-
-		var effective_hp = base_hp.shield / low_resonance + base_hp.armor + base_hp.structure;
-
-		$('#tower-details-hitpoints').text(number_format(Math.floor(effective_hp)));
-		$('#tower-hp-shield').text(number_format(base_hp.shield));
-		$('#tower-hp-armor').text(number_format(base_hp.armor));
-		$('#tower-hp-structure').text(number_format(base_hp.structure));
+		$('#tower-details-hitpoints').text(number_format(hp.effective));
+		$('#tower-hp-shield').text(number_format(hp.shield));
+		$('#tower-hp-armor').text(number_format(hp.armor));
+		$('#tower-hp-structure').text(number_format(hp.structure));
 	}
 
 	function tower_updated() {
 		update_tower_details();
 		update_tower_export();
 		update_mod_picker();
-		updateFuelBlockCalc();
-		updateStrontCalc();
+
+		update_fuel_block_calc();
+		update_stront_calc();
+
 		update_fragment();
 	}
 
@@ -362,8 +355,8 @@ App = (function($, model) {
 
 		tower.update(tower_updated);
 
-		updateFuelBlockCalc();
-		updateStrontCalc();
+		update_fuel_block_calc();
+		update_stront_calc();
 
 		if (!window.location.hash || !tower.importFromFragment(window.location.hash.substring(1))) {
 			set_tower_type();
