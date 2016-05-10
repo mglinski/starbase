@@ -2,4 +2,7 @@
 bower_packages
 node_modules
 build/sqlite-latest.sqlite
+build/sqlite-latest.sqlite.bz2
+sqlite-latest.sqlite
+sqlite-latest.sqlite.bz2
 dist

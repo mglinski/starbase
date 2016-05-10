@@ -1,225 +1,402 @@
 <html>
-	<head>
-		<title>EVE POS Builder</title>
-		<link rel="stylesheet" type="text/css" href="dist/css/main.min.css">
-		<script src="dist/js/main.min.js"></script>
-	</head>
-	<body>
+<head>
+    <title>EVE POS Builder</title>
+    <link rel="stylesheet" type="text/css" href="dist/css/main.min.css">
+    <script src="dist/js/main.min.js"></script>
+</head>
+<body>
 
-		<!-- Static navbar -->
-		<nav class="navbar navbar-default navbar-static-top" role="navigation">
-			<div class="container">
-				<div class="navbar-header">
-					<a class="navbar-brand">EVE POS Builder</a>
-				</div>
-				<div id="navbar" class="navbar-collapse collapse">
-					<ul class="nav navbar-nav">
-						<li><a id="getBuild" href="#" class="stopLink">Get Build URL</a></li>
-					</ul>
-				</div>
-			</div>
-		</nav>
+<!-- Static navbar -->
+<nav class="navbar navbar-default navbar-static-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <a class="navbar-brand">EVE POS Builder</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                <li><a id="getBuild" href="#" class="stopLink">Get Build URL</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
 
-		<!-- Container -->
-		<div class="container">
+<!-- Container -->
+<div class="container">
+    <ul class="nav nav-tabs nav-justified" role="tablist">
+        <li role="presentation" class="active">
+            <a href="#controlTowers" aria-controls="controlTowers" role="tab" data-toggle="tab">Control Towers</a>
+        </li>
+        <li role="presentation">
+            <a href="#structures" aria-controls="structures" role="tab" data-toggle="tab">Structures</a>
+        </li>
+    </ul>
+    <div class="tab-content">
+        <div role="tabpanel" class="tab-pane active" id="controlTowers">
+            <div class="row">
+                <div class="col-sm-12">
+                    <h2>
+                        <div class="pull-right">
+                            <div class="btn-group" data-toggle="buttons-checkbox">
+                                <a class="btn btn-xs btn-warning collapse-data-btn" data-toggle="collapse"
+                                   href="#tower_filters">
+                                    <i class="fa fa-caret-square-o-down"></i>
+                                    Toggle Tower Filters
+                                </a>
+                            </div>
+                        </div>
+                        Control Tower
+                    </h2>
+                    <form class="form" role="form" onsubmit="return false;">
+                        <div class="panel panel-default collapse" id="tower_filters">
+                            <div class="panel-heading">Tower Filters</div>
+                            <div class="panel-body">
+                                <label>
+                                    <input type="checkbox" id="tower-type-show-faction"/> Show Faction Towers?
+                                </label><br/>
 
-			<div class="row">
-				<div class="col-sm-12">
-					<h2>
-						<div class="pull-right">
-							<div class="btn-group" data-toggle="buttons-checkbox">
-								<a class="btn btn-xs btn-warning collapse-data-btn" data-toggle="collapse" href="#tower_filters">
-									<i class="fa fa-caret-square-o-down"></i>
-									Toggle Tower Filters
-								</a>
-							</div>
-						</div>
-						Control Tower
-					</h2>
-					<form class="form" role="form" onsubmit="return false;">
-						<div class="panel panel-default collapse" id="tower_filters">
-							<div class="panel-heading">Tower Filters</div>
-							<div class="panel-body">
-								<label>
-									<input type="checkbox" id="tower-type-show-faction" /> Show Faction Towers?
-								</label><br />
+                                <label>
+                                    <input type="checkbox" id="tower-type-sov"/> Enable Sov Fuel Bonus?
+                                </label>
+                            </div>
+                        </div>
 
-								<label>
-									<input type="checkbox" id="tower-type-sov" /> Enable Sov Fuel Bonus?
-								</label>
-							</div>
-						</div>
+                        <div class="form-group">
+                            <label>Tower Type</label>
+                            <div class="input-group">
+                                <select class="form-control" id="tower-type"></select>
+                                    <span class="input-group-btn">
+                                        <button id="tower-type-set" class="btn btn-primary">Set Tower Type</button>
+                                    </span>
+                            </div><!-- /input-group -->
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <h2>
+                        <div class="pull-right">
+                            <div class="btn-group" data-toggle="buttons-checkbox">
+                                <a class="btn btn-xs btn-warning collapse-data-btn" data-toggle="collapse"
+                                   href="#module_filters">
+                                    <i class="fa fa-caret-square-o-down"></i>
+                                    Toggle Module Filters
+                                </a>
+                            </div>
+                        </div>
+                        Modules
+                    </h2>
+                    <div id="mod-picker">
+                        <div class="panel panel-default collapse" id="module_filters">
+                            <div class="panel-heading">Module Filters</div>
+                            <div class="panel-body">
+                                <label>
+                                    <input type="checkbox" id="mod-picker-show-silly"/> Show Silly Modules
+                                </label><br/>
+                                <label>
+                                    <input type="checkbox" id="mod-picker-show-faction"/> Show Faction Modules
+                                </label><br/>
+                                <label>
+                                    <input type="checkbox" id="mod-picker-show-obsolete"/> Show Obsolete Modules
+                                </label>
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <select class="form-control" id="mod-picker-type"></select>
+                                <span class="input-group-btn">
+                                    <button id="mod-picker-add" class="btn btn-success">Add</button>
+                                </span>
+                        </div><!-- /input-group -->
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <h2>
+                        <div class="pull-right">
+                            <div class="btn-group" data-toggle="buttons-checkbox">
+                                <a class="btn btn-xs btn-warning collapse-data-btn" data-toggle="collapse"
+                                   href="#tower-export">
+                                    <i class="fa fa-caret-square-o-down"></i>
+                                    Toggle Text View
+                                </a>
+                            </div>
+                        </div>
+                        Your Build
+                    </h2>
+                    <div class="collapse" id="tower-export">
+                            <pre class="well" id="tower-export-text">
+                            </pre>
+                    </div>
+                    <div id="tower-details">
+                        <table class="table table-bordered table-striped table-condensed table-hover">
+                            <thead>
+                            <th>Module</th>
+                            <th>Quantity</th>
+                            <th>PG</th>
+                            <th>CPU</th>
+                            <th><!-- remove button --></th>
+                            </thead>
+                            <tbody id="tower-details-modules"></tbody>
+                            <tfoot>
+                            <td></td>
+                            <td>Remaining:</td>
+                            <td id="tower-details-pg-left"></td>
+                            <td id="tower-details-cpu-left"></td>
+                            <td><!-- remove button --></td>
+                            </tfoot>
+                        </table>
+                        <div class="well">
+                            <h4 style="margin-top: 0; margin-bottom: 20px;">Fuel Selector</h4>
+                            <dl class="dl-horizontal">
+                                <dt style="width: 256px;"><span
+                                        style="margin-right:30px"><strong>Calculation Duration:</strong> <span
+                                        id="tower-fuel-interval-text">Hours</span></span></dt>
+                                <dd><input id="tower-fuel-interval" data-slider-id='tower-fuel-interval-slider' type="text"
+                                           data-slider-value="1"/></dd>
+                                <br/><br/>
 
-						<div class="form-group">
-							<label>Tower Type</label>
-							<div class="input-group">
-								<select class="form-control" id="tower-type"></select>
-								<span class="input-group-btn">
-									<button id="tower-type-set" class="btn btn-primary">Set Tower Type</button>
-								</span>
-							</div><!-- /input-group -->
-						</div>
-					</form>
-				</div>
-			</div>
+                                <dt style="width: 256px;"><span
+                                        style="margin-right:30px"><strong>Fuel Amount:</strong> <span
+                                        id="tower-fuel-value-text">1 Hour</span></span></dt>
+                                <dd><input id="tower-fuel-value" data-slider-id='tower-fuel-value-slider' type="text"
+                                           data-slider-value="1"/></dd>
+                                <br/><br/>
 
-			<div class="row">
-				<div class="col-sm-12">
-					<h2>
-						<div class="pull-right">
-							<div class="btn-group" data-toggle="buttons-checkbox">
-								<a class="btn btn-xs btn-warning collapse-data-btn" data-toggle="collapse" href="#module_filters">
-									<i class="fa fa-caret-square-o-down"></i>
-									Toggle Module Filters
-								</a>
-							</div>
-						</div>
-						Modules
-					</h2>
-					<div id="mod-picker">
-						<div class="panel panel-default collapse" id="module_filters">
-							<div class="panel-heading">Module Filters</div>
-							<div class="panel-body">
-								<label>
-									<input type="checkbox" id="mod-picker-show-silly" /> Show Silly Modules
-								</label><br />
-								<label>
-									<input type="checkbox" id="mod-picker-show-faction" /> Show Faction Modules
-								</label><br />
-								<label>
-								    <input type="checkbox" id="mod-picker-show-obsolete" /> Show Obsolete Modules
-								</label>
-							</div>
-						</div>
-						<div class="input-group">
-							<select class="form-control" id="mod-picker-type"></select>
-							<span class="input-group-btn">
-								<button id="mod-picker-add" class="btn btn-success">Add</button>
-							</span>
-						</div><!-- /input-group -->
-					</div>
-				</div>
-			</div>
+                                <dt style="width: 256px;"><span
+                                        style="margin-right:30px"><strong>Reinforce Duration:</strong> <span
+                                        id="tower-stront-timer-text">1 Hour</span></span></dt>
+                                <dd><input id="tower-stront-timer" data-slider-id='tower-stront-timer-slider' type="text"
+                                           data-slider-value="1"/></dd>
 
-			<div class="row">
-				<div class="col-sm-12">
-					<h2>
-						<div class="pull-right">
-							<div class="btn-group" data-toggle="buttons-checkbox">
-								<a class="btn btn-xs btn-warning collapse-data-btn" data-toggle="collapse"
-								href="#tower-export">
-									<i class="fa fa-caret-square-o-down"></i>
-									Toggle Text View
-								</a>
-							</div>
-						</div>
-						Your Build
-					</h2>
-					<div class="collapse" id="tower-export">
-						<pre class="well" id="tower-export-text">
-						</pre>
-					</div>
-					<div id="tower-details">
-						<table class="table table-bordered table-striped table-condensed table-hover">
-							<thead>
-								<th>Module</th>
-								<th>Quantity</th>
-								<th>PG</th>
-								<th>CPU</th>
-								<th><!-- remove button --></th>
-							</thead>
-							<tbody id="tower-details-modules"></tbody>
-							<tfoot>
-								<td></td>
-								<td>Remaining:</td>
-								<td id="tower-details-pg-left"></td>
-								<td id="tower-details-cpu-left"></td>
-								<td><!-- remove button --></td>
-							</tfoot>
-						</table>
-						<div class="well">
-							<h4 style="margin-top: 0; margin-bottom: 20px;">Fuel Selector</h4>
-							<dl class="dl-horizontal">
-								<dt style="width: 256px;"><span style="margin-right:30px"><strong>Calculation Duration:</strong> <span id="tower-fuel-interval-text">Hours</span></span></dt>
-								<dd><input id="tower-fuel-interval" data-slider-id='tower-fuel-interval-slider' type="text" data-slider-value="1" /> </dd><br /><br />
+                            </dl>
+                        </div>
+                        <style>
+                            #tower-fuel-interval-slider .slider-selection, #tower-fuel-value-slider .slider-selection, #tower-stront-timer-slider .slider-selection {
+                                background: #BABABA;
+                            }
 
-								<dt style="width: 256px;"><span style="margin-right:30px"><strong>Fuel Amount:</strong> <span id="tower-fuel-value-text">1 Hour</span></span></dt>
-								<dd><input id="tower-fuel-value" data-slider-id='tower-fuel-value-slider' type="text" data-slider-value="1" /></dd><br /><br />
+                            #tower-fuel-interval-slider .slider-track, #tower-fuel-value-slider .slider-track, #tower-stront-timer-slider .slider-track {
+                                border: 1px solid #ccc;
+                            }
+                        </style>
+                        <div class="well">
+                            <dl class="dl-horizontal">
+                                <dt>Name:</dt>
+                                <dd><span id="tower-details-name"></span></dd>
+                                <dt>Total PG:</dt>
+                                <dd><i class="fa fa-power-off"></i> <span id="tower-details-pg"></span></dd>
+                                <dt>Total CPU:</dt>
+                                <dd><i class="fa fa-cog"></i> <span id="tower-details-cpu"></span></dd>
+                                <br/>
 
-								<dt style="width: 256px;"><span style="margin-right:30px"><strong>Reinforce Duration:</strong> <span id="tower-stront-timer-text">1 Hour</span></span></dt>
-								<dd><input id="tower-stront-timer" data-slider-id='tower-stront-timer-slider' type="text" data-slider-value="1" /> </dd>
+                                <dt>Fuel:</dt>
+                                <dd><span id="tower-details-fuel-monthly"></span>s<br/>
+                                    <span id="tower-details-fuel-volume"></span>m3 of <span
+                                            id="tower-details-fuel-volume-max"></span>m3
+                                </dd>
+                                <br/>
 
-							</dl>
-						</div>
-						<style>
-							#tower-fuel-interval-slider .slider-selection, #tower-fuel-value-slider .slider-selection, #tower-stront-timer-slider .slider-selection {
-								background: #BABABA;
-							}
-							#tower-fuel-interval-slider .slider-track, #tower-fuel-value-slider .slider-track, #tower-stront-timer-slider .slider-track {
-								border: 1px solid #ccc;
-							}
-						</style>
-						<div class="well">
-							<dl class="dl-horizontal">
-								<dt>Name:</dt> <dd><span id="tower-details-name"></span></dd>
-								<dt>Total PG:</dt> <dd><i class="fa fa-power-off"></i> <span id="tower-details-pg"></span></dd>
-								<dt>Total CPU:</dt> <dd><i class="fa fa-cog"></i> <span id="tower-details-cpu"></span></dd> <br />
+                                <dt>Stront:</dt>
+                                <dd><span id="tower-details-stront-hourly"></span> Per Hour<br/>
+                                    <span id="tower-details-stront-volume"></span>m3 of <span
+                                            id="tower-details-stront-volume-max"></span>m3
+                                </dd>
+                                <br/>
 
-								<dt>Fuel:</dt> <dd> <span id="tower-details-fuel-monthly"></span>s<br />
-													<span id="tower-details-fuel-volume"></span>m3 of <span id="tower-details-fuel-volume-max"></span>m3</dd><br />
+                                <dt>EM Resists:</dt>
+                                <dd><i class="icon-resist em"></i> <span id="tower-details-resonance-em"></span>%</dd>
+                                <dt>Thermal Resists:</dt>
+                                <dd><i class="icon-resist thermal"></i> <span id="tower-details-resonance-thermal"></span>%
+                                </dd>
+                                <dt>Kinetic Resists:</dt>
+                                <dd><i class="icon-resist kinetic"></i> <span id="tower-details-resonance-kinetic"></span>%
+                                </dd>
+                                <dt>Explosive Resists:</dt>
+                                <dd><i class="icon-resist explosive"></i> <span
+                                        id="tower-details-resonance-explosive"></span>%
+                                </dd>
+                                <br/>
 
-								<dt>Stront:</dt> <dd> <span id="tower-details-stront-hourly"></span> Per Hour<br />
-													  <span id="tower-details-stront-volume"></span>m3 of <span id="tower-details-stront-volume-max"></span>m3</dd><br />
+                                <dt>Effective Hitpoints:</dt>
+                                <dd><span id="tower-details-hitpoints"></span> EHP (based on lowest resist)</dd>
+                                <dt>Base Shield HP:</dt>
+                                <dd><span id="tower-hp-shield"></span> hp</dd>
+                                <dt>Base Armor HP:</dt>
+                                <dd><span id="tower-hp-armor"></span> hp</dd>
+                                <dt>Base Structure HP:</dt>
+                                <dd><span id="tower-hp-structure"></span> hp</dd>
 
-								<dt>EM Resists:</dt> <dd><i class="icon-resist em"></i> <span id="tower-details-resonance-em"></span>%</dd>
-								<dt>Thermal Resists:</dt> <dd><i class="icon-resist thermal"></i> <span id="tower-details-resonance-thermal"></span>%</dd>
-								<dt>Kinetic Resists:</dt> <dd><i class="icon-resist kinetic"></i> <span id="tower-details-resonance-kinetic"></span>%</dd>
-								<dt>Explosive Resists:</dt> <dd><i class="icon-resist explosive"></i> <span id="tower-details-resonance-explosive"></span>%</dd> <br />
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-								<dt>Effective Hitpoints:</dt> <dd><span id="tower-details-hitpoints"></span> EHP (based on lowest resist)</dd>
-								<dt>Base Shield HP:</dt> <dd><span id="tower-hp-shield"></span> hp</dd>
-								<dt>Base Armor HP:</dt> <dd><span id="tower-hp-armor"></span> hp</dd>
-								<dt>Base Structure HP:</dt> <dd><span id="tower-hp-structure"></span> hp</dd>
+        <div role="tabpanel" class="tab-pane" id="structures">
+            <div class="row">
+                <div class="col-sm-12">
+                    <h2>
+                        <div class="pull-right">
+                            <div class="btn-group" data-toggle="buttons-checkbox">
+                                <a class="btn btn-xs btn-warning collapse-data-btn" data-toggle="collapse"
+                                   href="#structure_filters">
+                                    <i class="fa fa-caret-square-o-down"></i>
+                                    Toggle Structure Filters
+                                </a>
+                            </div>
+                        </div>
+                        Structures
+                    </h2>
+                    <form class="form" role="form" onsubmit="return false;">
+                        <div class="panel panel-default collapse" id="structure_filters">
+                            <div class="panel-heading">Tower Filters</div>
+                            <div class="panel-body">
+                                <label>
+                                    <input type="checkbox" id="structure-type-show-faction"/> Show Faction Structures?
+                                </label><br/>
+                            </div>
+                        </div>
 
-							</dl>
-						</div>
-					</div>
-				</div>
-			</div>
+                        <div class="form-group">
+                            <label>Tower Type</label>
+                            <div class="input-group">
+                                <select class="form-control" id="structure-type"></select>
+                                    <span class="input-group-btn">
+                                        <button id="structure-type-set" class="btn btn-primary">Set Structure</button>
+                                    </span>
+                            </div><!-- /input-group -->
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <h2>
+                        Modules
+                    </h2>
+                        <div class="input-group">
+                            <select class="form-control" id="structure-mod-picker-type"></select>
+                                <span class="input-group-btn">
+                                    <button id="structure-mod-picker-add" class="btn btn-success">Add</button>
+                                </span>
+                        </div><!-- /input-group -->
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <h2>
+                        <div class="pull-right">
+                            <div class="btn-group" data-toggle="buttons-checkbox">
+                                <a class="btn btn-xs btn-warning collapse-data-btn" data-toggle="collapse"
+                                   href="#tower-export">
+                                    <i class="fa fa-caret-square-o-down"></i>
+                                    Toggle Text View
+                                </a>
+                            </div>
+                        </div>
+                        Your Build
+                    </h2>
+                    <div class="collapse" id="structure-export">
+                            <pre class="well" id="structure-export-text">
+                            </pre>
+                    </div>
+                    <div id="structure-details">
+                        <table class="table table-bordered table-striped table-condensed table-hover">
+                            <thead>
+                            <th>Module</th>
+                            <th>Quantity</th>
+                            <th>PG</th>
+                            <th>CPU</th>
+                            <th><!-- remove button --></th>
+                            </thead>
+                            <tbody id="structure-details-modules"></tbody>
+                            <tfoot>
+                            <td></td>
+                            <td>Remaining:</td>
+                            <td id="structure-details-pg-left"></td>
+                            <td id="structure-details-cpu-left"></td>
+                            <td><!-- remove button --></td>
+                            </tfoot>
+                        </table>
+                        <div class="well">
+                            <dl class="dl-horizontal">
+                                <dt>Name:</dt>
+                                <dd><span id="structure-details-name"></span></dd>
+                                <dt>Total PG:</dt>
+                                <dd><i class="fa fa-power-off"></i> <span id="structure-details-pg"></span></dd>
+                                <dt>Total CPU:</dt>
+                                <dd><i class="fa fa-cog"></i> <span id="structure-details-cpu"></span></dd>
+                                <br/>
 
-		</div>
+                                <dt>EM Resists:</dt>
+                                <dd><i class="icon-resist em"></i> <span id="structure-details-resonance-em"></span>%</dd>
+                                <dt>Thermal Resists:</dt>
+                                <dd><i class="icon-resist thermal"></i> <span id="structure-details-resonance-thermal"></span>%
+                                </dd>
+                                <dt>Kinetic Resists:</dt>
+                                <dd><i class="icon-resist kinetic"></i> <span id="structure-details-resonance-kinetic"></span>%
+                                </dd>
+                                <dt>Explosive Resists:</dt>
+                                <dd><i class="icon-resist explosive"></i> <span
+                                        id="structure-details-resonance-explosive"></span>%
+                                </dd>
+                                <br/>
 
-		<footer class="footer">
-			<div class="container">
-				<div class="row">
-					<div class="col-sm-12">
-						<p class="text-muted pull-right">MIT Licensed. <a href="https://github.com/eve-val/starbase" target="_blank">Get the Source</a></p>
-						<p class="text-muted">&copy; 2014 - Elly Fong-Jones, Matthew Glinski, CCP.</p>
-					</div>
-				</div>
-			</div>
-		</footer>
+                                <dt>Effective Hitpoints:</dt>
+                                <dd><span id="structure-details-hitpoints"></span> EHP (based on lowest resist)</dd>
+                                <dt>Base Shield HP:</dt>
+                                <dd><span id="structure-hp-shield"></span> hp</dd>
+                                <dt>Base Armor HP:</dt>
+                                <dd><span id="structure-hp-armor"></span> hp</dd>
+                                <dt>Base Structure HP:</dt>
+                                <dd><span id="structure-hp-structure"></span> hp</dd>
 
-		<div id="urlModal" class="modal fade">
-			<div class="modal-dialog">
-				<div class="modal-content">
-					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-						<h4 class="modal-title">Build URL</h4>
-					</div>
-					<div class="modal-body">
-						<form onsubmit="return false;">
-							<div class="form-group">
-								<label for="recipient-name" class="control-label">Share URL:</label><br />
-								<input type="text" class="buildLink form-control span6" onfocus="this.select()" class="form-control" id="recipient-name">
-							</div>
-						</form>
-					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-					</div>
-				</div><!-- /.modal-content -->
-			</div><!-- /.modal-dialog -->
-		</div><!-- /.modal -->
-	</body>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer class="footer">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <p class="text-muted pull-right">MIT Licensed. <a href="https://github.com/eve-val/starbase"
+                                                                  target="_blank">Get the Source</a></p>
+                <p class="text-muted">&copy; 2014 - Elly Fong-Jones, Matthew Glinski, CCP.</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<div id="urlModal" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Build URL</h4>
+            </div>
+            <div class="modal-body">
+                <form onsubmit="return false;">
+                    <div class="form-group">
+                        <label for="recipient-name" class="control-label">Share URL:</label><br/>
+                        <input type="text" class="buildLink form-control span6" onfocus="this.select()"
+                               class="form-control" id="recipient-name">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+</body>
 </html>

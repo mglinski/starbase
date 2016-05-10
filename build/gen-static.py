@@ -11,11 +11,16 @@ class EveSDE:
 
     def groups_in_category(self, category):
         c = self.db.cursor()
-        c.execute("SELECT categoryID FROM invCategories WHERE categoryName = ?", (category,))
+        c.execute("SELECT categoryID FROM invCategories WHERE categoryName = ? AND published = 1", (category,))
         category_id = c.fetchone()[0]
 
-        c.execute("SELECT groupName FROM invGroups WHERE categoryID = ?", (category_id,))
+        c.execute("SELECT groupName FROM invGroups WHERE categoryID = ? AND published = 1", (category_id,))
         return map(lambda x: x[0], c.fetchall())
+
+    def category_id(self, category):
+        c = self.db.cursor()
+        c.execute("SELECT categoryID FROM invCategories WHERE categoryName = ?", (category,))
+        return c.fetchone()[0]
 
     def group_id(self, group):
         c = self.db.cursor()
@@ -32,6 +37,22 @@ class EveSDE:
                   "AND typeName NOT LIKE 'QA %' AND published = 1", (group_id,))
         return map(lambda x: x[0], c.fetchall())
 
+    def items_in_category(self, category):
+        category_id = self.category_id(category)
+
+        # dirty hack here - some of the QA towers are marked published, so
+        # filter them by name instead of published field.
+        c = self.db.cursor()
+        c.execute("SELECT groupName FROM invGroups WHERE categoryID = ? AND published = 1", (category_id,))
+        groups = map(lambda x: x[0], c.fetchall())
+
+        items = list();
+        for groupName in groups:
+            new_items = self.items_in_group(groupName)
+            items += new_items
+
+        return items
+
     def item_id(self, item_name):
         c = self.db.cursor()
         c.execute("SELECT typeID FROM invTypes WHERE typeName = ? AND marketGroupID IS NOT NULL", (item_name,))
@@ -40,6 +61,11 @@ class EveSDE:
     def item_name(self, item_id):
         c = self.db.cursor()
         c.execute("SELECT typeName FROM invTypes WHERE typeID = ?", (item_id,))
+        return c.fetchone()[0]
+
+    def item_volume(self, item_name):
+        c = self.db.cursor()
+        c.execute("SELECT volume FROM invTypes WHERE typeName = ?", (item_name,))
         return c.fetchone()[0]
 
     def item_volume(self, item_name):
@@ -70,6 +96,29 @@ class EveSDE:
         if not values:
             return None
         return values[0] or values[1]
+
+    def all_item_attributes(self, item_name):
+        c = self.db.cursor()
+        item_id = self.item_id(item_name)
+
+        c.execute(
+            "SELECT dat.attributeID, dat.attributeName, dat.displayName, IFNULL(dta.valueInt, dta.valueFloat) AS value "
+            "FROM dgmTypeAttributes AS dta "
+            "JOIN dgmAttributeTypes AS dat ON dta.attributeID = dat.attributeID "
+            "WHERE dta.typeID = ? AND dat.published = 1", (item_id,))
+
+        values = {}
+        for r in c.fetchall():
+            values[r[0]] = {
+                'attributeID': r[0],
+                'attributeName': r[1],
+                'displayName': r[2],
+                'value': r[3],
+            }
+
+        if not values:
+            return None
+        return values
 
     def item_meta_group(self, item_name):
         meta_group_id = self.item_attribute(item_name, 'metaGroupID')
@@ -140,8 +189,8 @@ def tower_resonances(sde, tower_type):
 
 def hps(sde, item_type):
     return {
-        'structure': sde.item_attribute(item_type, 'hp'),
-        'armor': sde.item_attribute(item_type, 'armorHP'),
+        'structure': int(sde.item_attribute(item_type, 'hp')),
+        'armor': int(sde.item_attribute(item_type, 'armorHP')),
         # this is a float, :ccp:
         'shield': int(sde.item_attribute(item_type, 'shieldCapacity'))
     }
@@ -179,7 +228,48 @@ def dump_towers(sde):
     return control_towers
 
 
+def dump_structures(sde):
+    structures = {}
+    structure_types = sde.items_in_category('Structure')
+    for st in structure_types:
+        mg = sde.item_meta_group(st)
+        wt = bonused_weapon_type(sde, st)
+
+        t = {
+            'name': st,
+            'id': sde.item_id(st),
+            'power': int(sde.item_attribute(st, 'powerOutput')),
+            'cpu': int(sde.item_attribute(st, 'cpuOutput')),
+            'volume': int(sde.item_volume(st)),
+            'faction': (mg == 'Faction'),
+            'resonances': tower_resonances(sde, st),
+            'hp': hps(sde, st),
+            'attributes': sde.all_item_attributes(st)
+        }
+        if wt:
+            t['weapon_type'] = wt
+        structures[st] = t
+    return structures
+
+
 def mod_weapon_type(sde, type_name):
+    charge_group_id = sde.item_attribute(type_name, 'chargeGroup1')
+    if charge_group_id == sde.group_id('Projectile Ammo'):
+        return 'projectile'
+    if charge_group_id == sde.group_id('Hybrid Charge'):
+        return 'hybrid'
+    if charge_group_id == sde.group_id('Frequency Crystal'):
+        return 'energy'
+    if charge_group_id == sde.group_id('Torpedo'):
+        return 'missile'
+    if charge_group_id == sde.group_id('Cruise Missile'):
+        return 'missile'
+    if charge_group_id == sde.group_id('Mobile Missile Sentry'):
+        return 'missile'
+    return None
+
+
+def structure_mod_weapon_type(sde, type_name):
     charge_group_id = sde.item_attribute(type_name, 'chargeGroup1')
     if charge_group_id == sde.group_id('Projectile Ammo'):
         return 'projectile'
@@ -211,7 +301,7 @@ def mod_resonances(sde, type_name):
     return None
 
 
-def dump_mods(sde):
+def dump_tower_mods(sde):
     tower_mods = {}
     mod_groups = sde.groups_in_category('Starbase')
     # hack: Some tower modules are stupid, and we dont include them here.
@@ -239,10 +329,44 @@ def dump_mods(sde):
     return tower_mods
 
 
+def dump_structure_mods(sde):
+    structure_mods = {}
+    mod_groups = sde.groups_in_category('Structure Module')
+    for gr in mod_groups:
+        mod_types = sde.items_in_group(gr)
+        for smt in mod_types:
+            is_rig = ' Rig ' in gr
+            t = {
+                'name': smt,
+                'id': sde.item_id(smt),
+                'volume': sde.item_volume(smt),
+                'is_rig': is_rig,
+                'group': gr,
+                'power': sde.item_attribute(smt, 'power') or 0,
+                'cpu': sde.item_attribute(smt, 'cpu') or 0,
+                'faction': sde.item_meta_group(smt) == 'Faction',
+                'attributes': sde.all_item_attributes(smt)
+            }
+            wt = structure_mod_weapon_type(sde, smt)
+            if wt:
+                t['weapon_type'] = wt
+            structure_mods[smt] = t
+    return structure_mods
+
+
 conn = sqlite3.connect('sqlite-latest.sqlite')
 evesde = EveSDE(conn)
 
-towers = dump_towers(evesde)
-mods = dump_mods(evesde)
+towers = {}
+tower_mods = {}
 
-print 'starbase_static = %s;' % json.dumps({'towers': towers, 'mods': mods}, indent=4, sort_keys=True)
+towers = dump_towers(evesde)
+tower_mods = dump_tower_mods(evesde)
+
+structures = dump_structures(evesde)
+structure_mods = dump_structure_mods(evesde)
+
+print 'starbase_static = %s;' % json.dumps({'towers': towers, 'mods': tower_mods}, indent=4, sort_keys=True)
+
+print 'structure_static = %s;' % json.dumps({'structures': structures, 'mods': structure_mods}, indent=4,
+                                            sort_keys=True)

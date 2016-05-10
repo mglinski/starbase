@@ -7,14 +7,12 @@ var gulp = require('gulp'),
 	minifycss = require('gulp-minify-css'),
 	jshint = require('gulp-jshint'),
 	uglify = require('gulp-uglify'),
-	imagemin = require('gulp-imagemin'),
 	rename = require('gulp-rename'),
 	concat = require('gulp-concat'),
 	notify = require('gulp-notify'),
 	cache = require('gulp-cache'),
 	livereload = require('gulp-livereload'),
 	del = require('del'),
-	sprite = require('css-sprite').stream,
 	replace = require('gulp-replace');
 
 /**
@@ -53,7 +51,9 @@ var paths = {
 			settings.private + settings.js + 'util.js',
 			settings.private + settings.js + 'static.js',
 			settings.private + settings.js + 'model.js',
+			settings.private + settings.js + 'model-structure.js',
 			settings.private + settings.js + 'ui.js',
+			settings.private + settings.js + 'ui-structure.js',
 			//settings.private + settings.js + '**/*.js',
 		],
 		'fonts': [
@@ -103,7 +103,7 @@ gulp.task('scripts', function() {
 		.pipe(concat('main.js'))
 		.pipe(gulp.dest(paths.production.js))
 		.pipe(rename({suffix: '.min'}))
-		.pipe(uglify())
+		//.pipe(uglify())
 		.pipe(gulp.dest(paths.production.js))
 		//.pipe(notify({ message: 'Scripts task complete' }))
 		;
@@ -114,7 +114,6 @@ gulp.task('scripts', function() {
  */
 gulp.task('images', function() {
 	return gulp.src(paths.dev.img)
-		.pipe(imagemin({ optimizationLevel: 3, progressive: true, interlaced: true }))
 		.pipe(gulp.dest(paths.production.img))
 		//.pipe(notify({ message: 'Images task complete' }))
 		;
